@@ -12,6 +12,7 @@
 
 ## Setup
 ### Node.js
+![nodejs](img/nodejs.png)
 Download and run the installer at https://nodejs.org/
 Check the version of Node.js and npm with
 `node -v`
@@ -33,7 +34,10 @@ Use your favorite text editor, examples:
 
 This will generate a **package.json** file inside your folder.
 
+![npm init](img/npm-init.png)
+
 ### Discord js
+![discordjs](img/discordjs.png)
 
 - Type in your terminal `npm install discord.js`
 ([docs](https://discord.js.org/))
@@ -59,6 +63,9 @@ This will get the dotenv module which will allow us to use environment variables
  - Click on **Add Bot**.
 
 >This will add a bot user to the application. On Discord, bots are added to servers as users to be able to perform their functions. Now you can customize your bot user. Change its username and profile picture if you want.
+
+![bot token](img/bottoken.png)
+
  - Copy the Bot Token
  - In your **.env** file, add this line:
 	 - `TOKEN=<paste your token here>`
@@ -74,7 +81,9 @@ This is a **PRIVATE** token, you should **NOT** show anyone else this token. If 
 ### Test server
 To test your bot, go to Discord and **create a new server**.
 
-Now we need to generate an invite link for our bot user. Go back to the application developer portal, and navigate to **OAuth2 > Generate link**.
+Now we need to generate an invite link for our bot user. Go back to the application developer portal, and navigate to **OAuth2 > URL Generator**.
+
+![generate link](img/url-generator.png)
 
 - Search for "**bot**" in the scopes, and a list of bot permissions should appear underneath. Feel free to look around - for this one we will select:
 	- Read Messages/View Channels 
@@ -84,6 +93,8 @@ Now we need to generate an invite link for our bot user. Go back to the applicat
 - Select your test server in the "add to server" dropbox.
 - Click continue and authorize, and check that you are, in fact, a human... beep boop!
 - Finally, go over to the discord app and check your bot is now in your test server. It should appear on the member list with a "BOT" tag and an offline status with the given name and profile picture.
+
+![offline bot](img/offline-bot.png)
 
 ### Bringing it to life
 Finally we need to bring the bot to life. In your **bot.js** file, add the following lines:
@@ -105,6 +116,9 @@ Now let's run our code. Open your terminal inside the project folder, and type:
 `> node src/bot.js`
 
 If you see the "Ready!" message, head to Discord and check that the discord bot status has changed to online. Congratulations, it's a bot!
+
+![bot alive](img/bot-alive.png)
+![bot alive discord](img/bot-alive-discord.png)
 
 > Stop the execution of the command to stop the bot. Run the command again to restart the bot.
 
@@ -141,3 +155,35 @@ if (message.content  ===  'ping') {
 	message.reply('pong');
 }
 ```
+
+![ping pong](img/pingpong.png)
+
+## Making it better
+
+### .gitignore
+A very important file you cannot forget about if you're uploading your code. Add a **.gitignore** file to the root of your project folder, and add the following:
+```
+# Node build artifacts
+node_modules
+npm-debug.log
+
+.vs
+
+# Local development
+*.env
+*.dev
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
+```
+Something important to notice is that your .env file is in here, so your token is safe.
+
+### 24/7 Hosting
+We are currently hosting our bot locally, and if we close the terminal, our bot dies.
+ To fix this you can use a free hosting website called Heroku. ([Link](https://heroku.com/))
+
+Tutorials:
+- [Using a GitHub private repository](https://youtu.be/OFearuMjI4s)
+- [Using Heroku CLI](https://youtu.be/BPvg9bndP1U)
