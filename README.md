@@ -1,3 +1,4 @@
+
 # Discord bot with Node.js
 
 ## Documentation
@@ -65,3 +66,41 @@ This will get the dotenv module which will allow us to use environment variables
 
 #### Attention:
 This is a **PRIVATE** token, you should **NOT** show anyone else this token. If you accidentally post it somewhere, you can always reset it by clicking the **Reset Token** button in your bot page!
+
+- To use this .env file, write this line in the **bot.js** file:
+
+		require('dotenv').config();
+### Test server
+To test your bot, go to Discord and **create a new server**.
+
+Now we need to generate an invite link for our bot user. Go back to the application developer portal, and navigate to **OAuth2 > Generate link**.
+
+- Search for "**bot**" in the scopes, and a list of bot permissions should appear underneath. Feel free to look around - for this one we will select:
+	- Read Messages/View Channels 
+	- Send Messages
+	- Manage Messages
+- Copy the generated link at the bottom of this page and surf to it on your browser. A discord authorization page should appear giving you are logged in.
+- Select your test server in the "add to server" dropbox.
+- Click continue and authorize, and check that you are, in fact, a human... beep boop!
+- Finally, go over to the discord app and check your bot is now in your test server. It should appear on the member list with a "BOT" tag and an offline status with the given name and profile picture.
+
+### Bringing it to life
+Finally we need to bring the bot to life. In your **bot.js** file, add the following lines:
+
+```
+const { Client, Intents } =  require('discord.js');
+const  client  =  new  Client({ intents: [Intents.FLAGS.GUILDS] });
+
+client.once('ready', () => {
+	console.log('Ready!');
+});
+
+client.login(process.env.TOKEN);
+```
+([docs](https://discordjs.guide/creating-your-bot/#creating-the-main-file))
+
+Now let's run our code. Open your terminal inside the project folder, and type:
+
+`> node src/bot.js`
+
+If you see the "Ready!" message, head to Discord and check that the discord bot status has changed to online. Congratulations, it's a bot!
