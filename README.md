@@ -70,6 +70,7 @@ This is a **PRIVATE** token, you should **NOT** show anyone else this token. If 
 - To use this .env file, write this line in the **bot.js** file:
 
 		require('dotenv').config();
+
 ### Test server
 To test your bot, go to Discord and **create a new server**.
 
@@ -89,7 +90,7 @@ Finally we need to bring the bot to life. In your **bot.js** file, add the follo
 
 ```
 const { Client, Intents } =  require('discord.js');
-const  client  =  new  Client({ intents: [Intents.FLAGS.GUILDS] });
+const  client  =  new  Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -104,3 +105,39 @@ Now let's run our code. Open your terminal inside the project folder, and type:
 `> node src/bot.js`
 
 If you see the "Ready!" message, head to Discord and check that the discord bot status has changed to online. Congratulations, it's a bot!
+
+> Stop the execution of the command to stop the bot. Run the command again to restart the bot.
+
+### Ping ... Pong
+There are many types of events on discord. We have actually already used one, the 'ready' event. Check the code you already wrote:
+```
+client.once('ready', () => {
+	console.log('Ready!');
+});
+```
+This bit of code executes the console.log command when the client hears a 'ready' event. 
+
+Now let's make it act on a 'message' event. Add this bit of code:
+```
+client.on('messageCreate', (message) => {
+	console.log(message);
+});
+```
+Now our bot will listen to all the messages sent on your test server.
+
+ - Restart your bot
+ - Send  a message in your test server
+ - Check your terminal: the bot has logged your message!
+
+If you take a closer look at this message object, you will see it has many useful values, for example:
+- channelId: the channel where the message comes from.
+- content: the actual message text
+- author: a User object which contains their id, username, ...
+- mentions: a MessageMentions object with a boolean for a "everyone" ping, a list of users, ...
+
+Let's check wether the content of the message is "ping", and if so, respond with "pong":
+```
+if (message.content  ===  'ping') {
+	message.reply('pong');
+}
+```
