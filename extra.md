@@ -104,7 +104,7 @@ module.exports = {
 
         const targetMember = message.guild.members.cache.get(member.id);
         targetMember.kick();
-        message.channel.send(`${member.user.tag} has been kicked.`);
+        message.channel.send(`${member.user} has been kicked.`);
     }
 };
 ```
@@ -114,3 +114,29 @@ module.exports = {
 ![kicked](img/kicked.png)
 
  - Now copy the code for kicking over to the **ban** command, and just change `.kick()` to `.ban()` along with the informative messages.
+
+ ---
+ ## Welcome message and role
+
+- Go to the developer portal ([link](https://discord.com/developers/applications)). Go to your bot application > Bot and enable **both Privileged Gateway Intents**
+
+![privileged gateway intents](/img/privileged-gatweay-intents.png)
+
+Create a role for anyone who joins the server to be assigned. I have named this **"Newbie"**.
+
+In the bot.js file:
+ - Add the `Intents.FLAGS.GUILD_MEMBERS` intent to the client constructor
+ - Below the messageCreate event, add:
+
+```js
+client.on('guildMemberAdd', member => {
+    //Add welcome role
+    let welcomeRole = member.guild.roles.cache.find(role => role.name === 'Newbie');
+    member.roles.add(welcomeRole);
+
+    //send welcome message
+    const channel = member.guild.channels.cache.find(ch => ch.name === 'welcome');
+    if (!channel) return;
+    channel.send(`Welcome to the server, ${member}!`);
+});
+```

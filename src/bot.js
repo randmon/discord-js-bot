@@ -1,7 +1,9 @@
 require('dotenv').config();
 
 const { Client, Intents } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS]
+});
 
 client.once('ready', () => {
     console.log('Ready!');
@@ -36,6 +38,17 @@ client.on('messageCreate', (message) => {
     } else if (command === 'clear') {
         client.commands.get('clear').execute(message, args);
     }
+});
+
+client.on('guildMemberAdd', member => {
+    //Add welcome role
+    let welcomeRole = member.guild.roles.cache.find(role => role.name === 'Newbie');
+    member.roles.add(welcomeRole);
+
+    //Send welcome message
+    const channel = member.guild.channels.cache.find(ch => ch.name === 'welcome');
+    if (!channel) return;
+    channel.send(`Welcome to the server, ${member}!`);
 });
 
 client.login(process.env.TOKEN);

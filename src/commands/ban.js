@@ -12,6 +12,6 @@ module.exports = {
 
         const targetMember = message.guild.members.cache.get(member.id);
         targetMember.ban();
-        message.channel.send(`${member.user.tag} has been banned.`);
+        message.channel.send(`${member.user} has been banned.`);
     }
 };

@@ -12,6 +12,6 @@ module.exports = {
 
         const targetMember = message.guild.members.cache.get(member.id);
         targetMember.kick();
-        message.channel.send(`${member.user.tag} has been kicked.`);
+        message.channel.send(`${member.user} has been kicked.`);
     }
 };
