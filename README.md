@@ -131,8 +131,8 @@ client.once('ready', () => {
 ```
 This bit of code executes the console.log command when the client hears a 'ready' event. 
 
-Now let's make it act on a 'message' event. Add this bit of code:
-```js
+Now let's make it act on a 'messageCreate' event. Add this bit of code:
+```
 client.on('messageCreate', (message) => {
 	console.log(message);
 });
