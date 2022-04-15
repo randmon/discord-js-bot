@@ -1,4 +1,3 @@
-
 # Discord bot with Node.js
 
 ## Documentation
@@ -85,10 +84,7 @@ Now we need to generate an invite link for our bot user. Go back to the applicat
 
 ![generate link](img/url-generator.png)
 
-- Search for "**bot**" in the scopes, and a list of bot permissions should appear underneath. Feel free to look around - for this one we will select:
-	- Read Messages/View Channels 
-	- Send Messages
-	- Manage Messages
+- Search for "**bot**" in the scopes, and a list of bot permissions should appear underneath. Feel free to look around - for now we will select **Administrator**, which includes all permissions.
 - Copy the generated link at the bottom of this page and surf to it on your browser. A discord authorization page should appear giving you are logged in.
 - Select your test server in the "add to server" dropbox.
 - Click continue and authorize, and check that you are, in fact, a human... beep boop!
@@ -196,7 +192,7 @@ Users will be talking to eachother all the time. To make it clear when a user is
 const prefix = '!';
 client.on('messageCreate', (message) => {
     if (!message.content.startsWith(prefix)) {
-		return
+		return;
     }
 	// Command handling ...
 });
@@ -214,12 +210,12 @@ if (message.author.bot || !message.content.startsWith(prefix)) {
 
 After this we can define our command and its arguments
 ```js
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
+const args = message.content.slice(prefix.length).split(/ +/);
+const command = args.shift().toLowerCase();
 
-    if (command === 'ping') {
-        message.reply('pong');
-    }
+if (command === 'ping') {
+    message.reply('pong');
+}
 ```
 When adding more and more commands, this file can get quite big, so it's better if we start splitting the commands up into different files. Create a folder **commands** inside **src**. We need to use Node.js File System module *fs* ([doc](https://www.w3schools.com/nodejs/nodejs_filesystem.asp)) to get into other files.
 
