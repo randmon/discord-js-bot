@@ -113,4 +113,4 @@ module.exports = {
 
 ![kicked](img/kicked.png)
 
- - Now copy over the code for kicking over to the **ban** command, and just change `.kick()` to `.ban()` along with the informative messages.
+ - Now copy the code for kicking over to the **ban** command, and just change `.kick()` to `.ban()` along with the informative messages.
