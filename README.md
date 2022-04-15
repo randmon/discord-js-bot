@@ -96,8 +96,13 @@ Now we need to generate an invite link for our bot user. Go back to the applicat
 Finally we need to bring the bot to life. In your **bot.js** file, add the following lines:
 
 ```js
-const { Client, Intents } =  require('discord.js');
-const  client  =  new  Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const Discord =  require('discord.js');
+const client  =  new  Discord.Client({
+	intents: [
+		Discord.Intents.FLAGS.GUILDS,
+		Discord.Intents.FLAGS.GUILD_MESSAGES
+	]
+});
 
 client.once('ready', () => {
 	console.log('Ready!');

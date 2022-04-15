@@ -1,8 +1,13 @@
 require('dotenv').config();
 
-const { Client, Intents } = require('discord.js');
-const client = new Client({
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS]
+const Discord = require('discord.js');
+const client = new Discord.Client({
+    intents: [
+        Discord.Intents.FLAGS.GUILDS,
+        Discord.Intents.FLAGS.GUILD_MESSAGES,
+        Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Discord.Intents.FLAGS.GUILD_MEMBERS
+    ]
 });
 
 client.once('ready', () => {
@@ -37,6 +42,8 @@ client.on('messageCreate', (message) => {
         client.commands.get('ban').execute(message, args);
     } else if (command === 'clear') {
         client.commands.get('clear').execute(message, args);
+    } else if (command === 'reactionrole') {
+        client.commands.get('reactionrole').execute(message, args, Discord, client);
     }
 });
 

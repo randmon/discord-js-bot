@@ -16,13 +16,13 @@ Copy the id. You can now turn off the `Allow anyone to @mention this role` optio
 Now let's make it so that only users with the Mod role can use our ping command. In the ping.js file, inside the **execute** method:
 
 ```js
-if (message.member.roles.cache.has('964518400527331368')) {
+if (message.member.roles.cache.has('YOUR ROLE ID HERE')) {
     message.reply('pong!');
 } else {
     message.reply('You do not have permission to use this command.');
 }
 ```
- - Replace the ID with your own Mod role ID.
+ - Replace the text with your own Mod role ID.
 
 Let's test it. I don't currently have the Mod role.
 ![no permission](img/no-permission.png)
@@ -125,7 +125,7 @@ module.exports = {
 Create a role for anyone who joins the server to be assigned. I have named this **"Newbie"**.
 
 In the bot.js file:
- - Add the `Intents.FLAGS.GUILD_MEMBERS` intent to the client constructor
+ - Add the `GUILD_MEMBERS` intent to the client constructor
  - Below the messageCreate event, add:
 
 ```js
@@ -140,3 +140,86 @@ client.on('guildMemberAdd', member => {
     channel.send(`Welcome to the server, ${member}!`);
 });
 ```
+
+## Reaction Roles
+
+We want to give users specific roles when they react to a certain message with an emoji.
+
+ - Add the `GUILD_MESSAGE_REACTIONS` intent to the client constructor.
+ - Add a reaction role command to the command handler in the **bot.js** file:
+```js
+ else if (command === 'reactionRole') {
+    client.commands.get('reactionRole').execute(message, args, Client, client);
+}
+```
+ - We are going to create two roles on the server for this demonstration, **Blue** and **Red**. I've also created a channel **get-roles** on the server where the message with the reactions will be.
+ - Create a **reactionRole.js** command file:
+```js
+module.exports = {
+    name: "reactionrole",
+    description: "React to a message to get a role",
+    execute(message, args, Discord, client) {
+        const channel = 'YOUR CHANNEL ID HERE';
+        //...
+    }
+}
+```
+- Replace the text with your own get-roles channel ID
+- Next store the roles as variables
+```js
+const blueRole = message.guild.roles.cache.find(role => role.name === 'Blue');
+const redRole = message.guild.roles.cache.find(role => role.name === 'Red');
+```
+
+Choose one emoji for each role. Type a "\\" before the emoji and send it as a message in your server. This way you can copy the emoji correctly into your code.
+
+![emojis message](/img/emojis-backslash.png)
+
+- Now store your emojis as variables
+```js
+const blueEmoji = '🔵';
+const redEmoji = '🔴';
+```
+- This is the message we will be sending ([docs on embeds](https://discordjs.guide/popular-topics/embeds.html#embed-preview)):
+```js
+let embed = new Discord.MessageEmbed()
+    .setTitle('React to this message to join a team!')
+    .setDescription('React with 🔵 for the Blue team or 🔴 for the Red team.')
+    .setColor('#0099ff');
+```
+
+Now we just have to send the message and react to it, but we need it to wait for the message to be sent to be able to react
+- Make the execute method async: add the `async` keyword before the word `execute`
+- After the definition of your embed message, send it and wait for it:
+```js
+let messageEmbed = await message.channel.send({ embeds: [embed] });
+```
+- Now it can react to the message:
+```js
+messageEmbed.react(blueEmoji);
+messageEmbed.react(redEmoji);
+```
+
+![reaction role message](img/reaction-role.png)
+
+ - Still in the execute method, add a listener for reactions:
+
+ ```js
+ client.on('messageReactionAdd', async(reaction, user) => {
+    if (reaction.message.partial) await reaction.message.fetch();
+    if (reaction.partial) await reaction.fetch();
+    if (user.bot || !reaction.message.guild || reaction.message.channel.id !== channel) return;
+
+    if (reaction.emoji.name === blueEmoji) {
+        await reaction.message.guild.members.cache.get(user.id).roles.add(blueRole);
+    } else if (reaction.emoji.name === redEmoji) {
+        await reaction.message.guild.members.cache.get(user.id).roles.add(redRole);
+    } else return;
+});
+ ```
+
+ - The code to remove the role is almost the same:
+    - Replace `messageReactionAdd` with `messageReactionRemove`
+    - Replace `roles.add(...)` with `roles.remove(...)`
+
+![roles assigned](img/blue-red-roles-assigned.png)
