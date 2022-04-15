@@ -99,7 +99,7 @@ Now we need to generate an invite link for our bot user. Go back to the applicat
 ### Bringing it to life
 Finally we need to bring the bot to life. In your **bot.js** file, add the following lines:
 
-```js
+```
 const { Client, Intents } =  require('discord.js');
 const  client  =  new  Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -124,7 +124,7 @@ If you see the "Ready!" message, head to Discord and check that the discord bot 
 
 ### Ping ... Pong
 There are many types of events on discord. We have actually already used one, the 'ready' event. Check the code you already wrote:
-```js
+```
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -132,7 +132,7 @@ client.once('ready', () => {
 This bit of code executes the console.log command when the client hears a 'ready' event. 
 
 Now let's make it act on a 'message' event. Add this bit of code:
-```js
+```
 client.on('messageCreate', (message) => {
 	console.log(message);
 });
@@ -150,7 +150,7 @@ If you take a closer look at this message object, you will see it has many usefu
 - mentions: a MessageMentions object with a boolean for a "everyone" ping, a list of users, ...
 
 Let's check wether the content of the message is "ping", and if so, respond with "pong":
-```js
+```
 if (message.content  ===  'ping') {
 	message.reply('pong');
 }
@@ -192,62 +192,3 @@ Tutorials:
 ### Commands
 Users will be talking to eachother all the time. To make it clear when a user is talking to someone or giving a command to the bot, we can define a prefix. Feel free to choose any prefix you want, for this demo we will be using a "*!*".
 
-```js
-const prefix = '!';
-client.on('messageCreate', (message) => {
-    if (!message.content.startsWith(prefix)) {
-		return
-    }
-	// Command handling ...
-});
-```
-
-We have a ping command (the bot responds with 'pong' when a user says 'ping'). But now imagine we add a second part to it - the bot responds 'ping' when the message is 'pong'. Can you figure what the problem is?
-
-We can check if the user that sent the message is the bot, and ignore it as well.
-
-```js
-if (message.author.bot || !message.content.startsWith(prefix)) {
-	return;
-}
-```
-
-After this we can define our command and its arguments
-```js
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if (command === 'ping') {
-        message.reply('pong');
-    }
-```
-When adding more and more commands, this file can get quite big, so it's better if we start splitting the commands up into different files. Create a folder **commands** inside **src**. We need to use Node.js File System module *fs* ([doc](https://www.w3schools.com/nodejs/nodejs_filesystem.asp)) to get into other files.
-
-```js
-const fs = require('fs');
-client.commands = new Map();
-const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
-}
-```
-
-Create a file **ping.js** inside your new commands folder. In it you can add this code:
-```js
-module.exports = {
-    name: 'ping',
-    description: 'Ping!',
-    execute(message, args) {
-        message.reply('pong!');
-    }
-};
-```
-
-Now go back to the bot.js file, and in the command handler replace the original ping command with a call to the external command:
-
-```js
-if (command === 'ping') {
-	client.commands.get('ping').execute(message, args);
-}
-```
